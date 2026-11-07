@@ -4,8 +4,7 @@ Sistema de gestión de biblioteca con **autores y libros**, construido con **API
 
 > Laboratorio 12: *API's Integradas*. Curso **Desarrollo de Aplicaciones Web Avanzado**, Tecsup.
 
-🔗 **Demo en vivo:** _[agrega aquí tu link de Vercel]_
-
+🔗 **Demo en vivo:** https://biblioteca-3yrt.vercel.app
 ---
 
 ## ✨ Funcionalidades
