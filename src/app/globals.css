@@ -1,26 +1,111 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Paleta "Biblioteca Nocturna": ciruela, pergamino y oro */
+@theme {
+  --color-night: #120d16;
+  --color-panel: #1b1420;
+  --color-panel-2: #241b2a;
+  --color-edge: #3a2d3f;
+  --color-parchment: #f3e9d8;
+  --color-dust: #a99aa8;
+  --color-gold: #d9b26f;
+  --color-gold-2: #f0cf8f;
+  --color-rose: #e0607a;
+  --color-rose-2: #f2a0b0;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-manrope), system-ui, sans-serif;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --animate-rise: rise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  --animate-flicker: flicker 2.6s ease-in-out infinite;
+  --animate-twinkle: twinkle 3.5s ease-in-out infinite;
+  --animate-drawer: drawer 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  --animate-fade: fade 0.25s ease-out both;
+
+  @keyframes rise {
+    from { transform: translateY(18px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes flicker {
+    0%, 100% { transform: scale(1, 1); opacity: 1; }
+    30% { transform: scale(0.94, 1.06); opacity: 0.92; }
+    60% { transform: scale(1.04, 0.95); opacity: 1; }
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.25; }
+    50% { opacity: 1; }
+  }
+  @keyframes drawer {
+    from { transform: translateX(40px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  @keyframes fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-night);
+  background-image:
+    radial-gradient(ellipse 60% 40% at 70% -5%, rgb(217 178 111 / 0.10), transparent 70%),
+    radial-gradient(ellipse 50% 50% at 0% 100%, rgb(224 96 122 / 0.07), transparent 70%);
+  background-attachment: fixed;
+  color: var(--color-parchment);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-night);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+option {
+  background: var(--color-panel);
+  color: var(--color-parchment);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---------- Clases reutilizables ---------- */
+@utility input {
+  @apply w-full rounded-xl border border-edge bg-night/60 px-4 py-2.5 text-sm text-parchment outline-none transition placeholder:text-dust/60 focus:border-gold/70 focus:ring-4 focus:ring-gold/10;
+}
+
+@utility label {
+  @apply mb-1.5 block text-xs font-semibold text-dust;
+}
+
+@utility eyebrow {
+  @apply text-[11px] font-bold uppercase tracking-[0.25em] text-gold;
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition disabled:cursor-not-allowed disabled:opacity-40;
+}
+
+@utility btn-primary {
+  @apply btn bg-gold text-night shadow-[0_8px_24px_-8px_rgb(217_178_111/0.6)] hover:bg-gold-2;
+}
+
+@utility btn-secondary {
+  @apply btn border border-edge bg-panel-2/70 text-parchment hover:border-gold/60;
+}
+
+@utility btn-danger {
+  @apply btn border border-rose/40 text-rose-2 hover:bg-rose/15;
+}
+
+@utility panel {
+  @apply rounded-3xl border border-edge bg-gradient-to-b from-panel-2/90 to-panel/90 shadow-[0_20px_50px_-25px_rgb(0_0_0/0.8)];
 }
