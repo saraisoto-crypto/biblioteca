@@ -1,36 +1,155 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌙 Biblioteca Nocturna
 
-## Getting Started
+Sistema de gestión de biblioteca con **autores y libros**, construido con **API Routes de Next.js**, **Prisma ORM** y **PostgreSQL en Neon**.
 
-First, run the development server:
+> Laboratorio 12: *API's Integradas*. Curso **Desarrollo de Aplicaciones Web Avanzado**, Tecsup.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+🔗 **Demo en vivo:** _[agrega aquí tu link de Vercel]_
+
+---
+
+## ✨ Funcionalidades
+
+### Dashboard de autores (`/`)
+- Estadísticas generales: autores, libros, géneros y páginas totales.
+- Ilustración con un estante que muestra los libros reales de la base de datos.
+- Crear, editar y eliminar autores desde un panel lateral.
+- Acceso al detalle de cada autor.
+
+### Catálogo de libros (`/books`)
+- Búsqueda **en tiempo real** por título (con *debounce*).
+- Filtros por **género** y **autor**.
+- Ordenamiento por título, año de publicación o fecha de registro.
+- **Paginación** con navegación entre páginas y total de resultados.
+- Crear, editar y eliminar libros.
+- Portadas ilustradas generadas con SVG según el género de cada libro.
+
+### Detalle de autor (`/authors/[id]`)
+- Información completa del autor.
+- Estadísticas: total de libros, primer y último libro, promedio de páginas, libro más extenso y más breve, géneros.
+- Estante con sus libros y lista completa de su obra.
+- Editar al autor y agregarle libros nuevos.
+
+---
+
+## 🛠️ Tecnologías
+
+| Tecnología | Uso |
+|---|---|
+| **Next.js 16** (App Router + Turbopack) | Frontend y API Routes |
+| **TypeScript** | Tipado estático |
+| **Prisma 6** | ORM para PostgreSQL |
+| **Neon** | Base de datos PostgreSQL serverless |
+| **Tailwind CSS 4** | Estilos |
+| **Vercel** | Despliegue |
+
+---
+
+## 📡 Endpoints de la API
+
+### Autores
+| Método | Ruta | Descripción |
+|---|---|---|
+| `GET` | `/api/authors` | Listar todos los autores |
+| `POST` | `/api/authors` | Crear un autor |
+| `GET` | `/api/authors/:id` | Obtener un autor por ID |
+| `PUT` | `/api/authors/:id` | Actualizar un autor |
+| `DELETE` | `/api/authors/:id` | Eliminar un autor (y sus libros) |
+| `GET` | `/api/authors/:id/books` | Libros de un autor |
+| `GET` | `/api/authors/:id/stats` | Estadísticas de un autor |
+
+### Libros
+| Método | Ruta | Descripción |
+|---|---|---|
+| `GET` | `/api/books` | Listar libros (filtros `genre`, `authorId`) |
+| `POST` | `/api/books` | Crear un libro |
+| `GET` | `/api/books/:id` | Obtener un libro por ID |
+| `PUT` | `/api/books/:id` | Actualizar un libro |
+| `DELETE` | `/api/books/:id` | Eliminar un libro |
+| `GET` | `/api/books/genres` | Lista de géneros únicos |
+| `GET` | `/api/books/search` | Búsqueda con filtros y paginación |
+
+#### Parámetros de `/api/books/search`
+| Parámetro | Descripción | Por defecto |
+|---|---|---|
+| `search` | Búsqueda parcial por título (sin distinguir mayúsculas) | — |
+| `genre` | Género exacto | — |
+| `authorName` | Búsqueda parcial por nombre del autor | — |
+| `page` | Número de página | `1` |
+| `limit` | Resultados por página (máximo 50) | `10` |
+| `sortBy` | `title`, `publishedYear` o `createdAt` | `createdAt` |
+| `order` | `asc` o `desc` | `desc` |
+
+Ejemplo:
+```
+GET /api/books/search?search=amor&genre=Novela&page=1&limit=10&sortBy=publishedYear&order=desc
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Instalación local
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Clonar el repositorio e instalar dependencias:
+   ```bash
+   git clone https://github.com/saraisoto-crypto/biblioteca.git
+   cd biblioteca
+   npm install
+   ```
 
-## Learn More
+2. Crear un archivo `.env` en la raíz con las cadenas de conexión de Neon:
+   ```env
+   DATABASE_URL="postgresql://USUARIO:PASSWORD@HOST-pooler.neon.tech/neondb?sslmode=require"
+   DIRECT_URL="postgresql://USUARIO:PASSWORD@HOST.neon.tech/neondb?sslmode=require"
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+3. Crear las tablas en la base de datos:
+   ```bash
+   npx prisma db push
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. Iniciar el servidor de desarrollo:
+   ```bash
+   npm run dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+5. Abrir [http://localhost:3000](http://localhost:3000).
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📁 Estructura del proyecto
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+├── app/
+│   ├── api/
+│   │   ├── authors/
+│   │   │   ├── route.ts
+│   │   │   └── [id]/
+│   │   │       ├── route.ts
+│   │   │       ├── books/route.ts
+│   │   │       └── stats/route.ts
+│   │   └── books/
+│   │       ├── route.ts
+│   │       ├── [id]/route.ts
+│   │       ├── genres/route.ts
+│   │       └── search/route.ts
+│   ├── authors/[id]/page.tsx   # Detalle del autor
+│   ├── books/page.tsx          # Catálogo con búsqueda
+│   ├── layout.tsx
+│   └── page.tsx                # Dashboard
+├── components/                 # Formularios, tarjetas, portadas SVG, sidebar…
+└── lib/
+    ├── prisma.ts               # Cliente de Prisma
+    ├── genre.ts                # Colores y escenas por género
+    └── types.ts                # Tipos compartidos
+prisma/
+└── schema.prisma               # Modelos Author y Book
+```
+
+---
+
+## 👩‍💻 Autora
+
+**Sarai Sthefanie Soto López**
+Desarrollo de Software, Tecsup
+GitHub: [@saraisoto-crypto](https://github.com/saraisoto-crypto)
